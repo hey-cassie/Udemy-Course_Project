@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs/Subject';
 import { Ingredient } from '../shared/ingredient.model';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { Recipe } from './recipe.model';
 
 @Injectable()
 export class RecipeService {
+    recipesChanged = new Subject<Recipe[]>();
 
     private recipes: Recipe[] = [
         new Recipe('Big Juicy Cheeseburger', 'Droooool',
@@ -12,10 +14,10 @@ export class RecipeService {
             new Ingredient('Beef Patty', 1),
             new Ingredient('Bunz', 1)
         ]),
-        new Recipe('Pepperoni Pizza', 'Yummmmm',
-        'https://media2.fdncms.com/metrotimes/imager/u/original/22492809/60286338_10161625009945177_2714216681630072832_o.jpg', [
-            new Ingredient('Pizza Doh!', 1),
-            new Ingredient('Pepperoni', 30)
+        new Recipe('Banana Split', 'Yummmmm',
+        'https://cdn.kiwilimon.com/recetaimagen/26478/26077.jpg', [
+            new Ingredient('Nanners', 2),
+            new Ingredient('Sprinkles!', 300)
         ])
       ];
 
@@ -33,5 +35,20 @@ export class RecipeService {
       addIngredientsToShoppingList(ingredients: Ingredient[]){
           //this.recipes.push(this.recipeSelected.ingredients)
           this.shoppingListService.addIngredients(ingredients);
+      }
+
+      addRecipe(recipe: Recipe) {
+        this.recipes.push(recipe);
+        this.recipesChanged.next(this.recipes.slice());
+      }
+
+      updateRecipe(index: number, newRecipe: Recipe) {
+        this.recipes[index] = newRecipe;
+        this.recipesChanged.next(this.recipes.slice());
+      }
+
+      deleteRecipe(index: number) {
+        this.recipes.splice(index, 1);
+        this.recipesChanged.next(this.recipes.slice());
       }
 }
