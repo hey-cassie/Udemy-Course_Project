@@ -8,20 +8,27 @@ import { Recipe } from './recipe.model';
 export class RecipeService {
     recipesChanged = new Subject<Recipe[]>();
 
-    private recipes: Recipe[] = [
-        new Recipe('Big Juicy Cheeseburger', 'Droooool',
-        'https://eccos-pizza.com/wp-content/uploads/2019/05/cheese-burger.jpg', [
-            new Ingredient('Beef Patty', 1),
-            new Ingredient('Bunz', 1)
-        ]),
-        new Recipe('Banana Split', 'Yummmmm',
-        'https://cdn.kiwilimon.com/recetaimagen/26478/26077.jpg', [
-            new Ingredient('Nanners', 2),
-            new Ingredient('Sprinkles!', 300)
-        ])
-      ];
+    // private recipes: Recipe[] = [
+    //     new Recipe('Big Juicy Cheeseburger', 'Droooool',
+    //     'https://eccos-pizza.com/wp-content/uploads/2019/05/cheese-burger.jpg', [
+    //         new Ingredient('Beef Patty', 1),
+    //         new Ingredient('Bunz', 1)
+    //     ]),
+    //     new Recipe('Banana Split', 'Yummmmm',
+    //     'https://cdn.kiwilimon.com/recetaimagen/26478/26077.jpg', [
+    //         new Ingredient('Nanners', 2),
+    //         new Ingredient('Sprinkles!', 300)
+    //     ])
+    //   ];
+    private recipes: Recipe[] = [];
+    
+    constructor(private shoppingListService: ShoppingListService){}
 
-      constructor(private shoppingListService: ShoppingListService){}
+      setRecipes(recipes: Recipe[]) {
+        this.recipes = recipes;
+        this.recipesChanged.next(this.recipes.slice());
+      }
+    
 
       getRecipes() {
           return this.recipes.slice();
